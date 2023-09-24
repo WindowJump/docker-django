@@ -35,10 +35,24 @@ services:
       context: .
     hostname: worker
     entrypoint: celery
-    command: -A celery_app.app worker --loglevel=info
+    command: -A proj worker --loglevel=info
     volumes:
       - ./main_dir:/main_dir
     links:
       - redis
     depends_on:
       - redis
+      - database
+
+  celery-beat:
+    build:
+      context: .
+    entrypoint: celery
+    command: -A proj beat --loglevel=info
+    volumes:
+      - ./main_dir:/main_dir
+    links:
+      - redis
+    depends_on:
+      - redis
+      - database

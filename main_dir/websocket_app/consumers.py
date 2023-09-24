@@ -1,4 +1,3 @@
-import channels.exceptions
 from channels.generic.websocket import AsyncConsumer
 from channels.exceptions import StopConsumer
 
