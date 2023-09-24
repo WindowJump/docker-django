@@ -1,4 +1,6 @@
+import channels.exceptions
 from channels.generic.websocket import AsyncConsumer
+from channels.exceptions import StopConsumer
 
 
 class TestWebSocketConsumer(AsyncConsumer):
@@ -6,3 +8,10 @@ class TestWebSocketConsumer(AsyncConsumer):
         await self.send({
             'type': 'websocket.accept',
         })
+
+    async def websocket_disconnect(self, scope):
+        await self.send({
+            'type': 'websocket.close',
+        })
+
+        raise StopConsumer
