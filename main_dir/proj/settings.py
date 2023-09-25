@@ -135,4 +135,10 @@ CELERY_RESULT_BACKEND = 'redis://redis:6379/0'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
-CELERY_TIMEZONE = 'UTC'
+CELERY_BEAT_SCHEDULE = {
+    'accept_task':
+        {
+            'task': 'websocket_app.tasks.debug_task',
+            'schedule': crontab(minute='*/1'),
+        },
+}

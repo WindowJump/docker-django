@@ -2,25 +2,13 @@ import os
 import time
 
 from celery import Celery
-from celery.schedules import crontab
+from celery import shared_task
+
 from django.conf import settings
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'proj.settings')
 
 app = Celery('proj')
-app.config_from_object('django.conf:settings')
-app.conf.broker_url = settings.CELERY_BROKER_URL
-app.autodiscover_tasks()
-app.conf.beat_schedule = {
-    'accept_task':
-        {
-            'task': 'proj.celery_app.debug_task',
-            'schedule': crontab(minute='*/1'),
-        },
-}
+app.config_from_object('django.conf:settings', namespace='CELERY')
 
-
-@app.task()
-def debug_task():
-    time.sleep(1)
-    print('Hello from debug_task')
+app.autodiscover_tasks(lambda: settings.INSTALLED_APPS)
